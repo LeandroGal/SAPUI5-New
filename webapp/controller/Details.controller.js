@@ -14,7 +14,8 @@ sap.ui.define([
 
         return Controller.extend("logaligroup.SAPUI5.controller.Details", {
 
-            _onObjectMatch: function(oEvent) {
+            _onObjectMatch: function (oEvent) {
+                this.byId("rating").reset();
                 this.getView().bindElement({
                     path: "/" + window.decodeURIComponent(oEvent.getParameter("arguments").invoicePath),
                     model: "northwind"
@@ -26,16 +27,23 @@ sap.ui.define([
                 oRouter.getRoute("Details").attachPatternMatched(this._onObjectMatch, this);
             },
             
-            onNavBack: function() {
-                const oHistory = History.getInstance(); // Obtiene la instancia del historial
-                const sPrevioushash = oHistory.getPreviousHash();
+            onNavBack: function () {
+                const oHistory = History.getInstance();
+                const sPreviousHash = oHistory.getPreviousHash();
 
-                if(sPrevioushash !== undefined){
-                    window.history.go(-1); // Si obtengo el sPrevioushash vuelvo una pagina atras.
+                if (sPreviousHash !== undefined) {
+                    window.history.go(-1);
                 } else {
-                    const oRouter = UIComponent.getRouterFor(this); // Caso contrario, obtengo la ruta de la app
-                    oRouter.navTo("RouteApp", {}, true); // RouteApp es la que se encuentra en el OverView (El Worklist inicial) | Con un objeto vacio ya que no nos interesa pasar parametros | Con true realiza la llamada a la navegacion
+                    const oRouter = UIComponent.getRouterFor(this);
+                    oRouter.navTo("RouteApp", {}, true);
                 }
+            },
+
+            onRatingChange: function(oEvent) {
+                const fValue = oEvent.getParameter("value");
+                const oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
+
+                sap.m.MessageToast.show(oResourceBundle.getText("ratingConfirmation", [fValue]));
             }
         });
     });
