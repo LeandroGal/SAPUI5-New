@@ -39,7 +39,15 @@ function (Controller, JSONModel, InvoicesFormatter, Filter, FilterOperator) {
             const oList = this.getView().byId("invoiceList");
             const oBinding = oList.getBinding("items");
             oBinding.filter(aFilter);
+        },
+        // Funcion que me dirige a la pagina de detalles al presionar cualquier producto
+        navigateToDetails : function(oEvent) {
+            const oItem = oEvent.getSource();
+            const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            oRouter.navTo("Details", {
+                invoicePath: window.encodeURIComponent(oItem.getBindingContext("northwind").getPath().substr(1))
+                //substr(1) para borrar el primer caracter
+            });
         }
-
     });
 });
